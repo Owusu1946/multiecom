@@ -8,14 +8,69 @@ import Animated, {
   SlideInRight,
   SlideOutLeft 
 } from 'react-native-reanimated';
+import { ImageSourcePropType } from 'react-native';
+import LottieView from 'lottie-react-native';
 
-import { onboardingSlides } from '../constants/onboarding';
-import OnboardingSlide from '../components/onboarding/OnboardingSlide';
 import PaginationDot from '../components/onboarding/PaginationDot';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
+
+interface OnboardingSlide {
+  id: string;
+  title: string;
+  description: string;
+  animation: any; // Lottie animation source
+}
+
+const onboardingSlides: OnboardingSlide[] = [
+  {
+    id: '1',
+    title: 'Welcome to eMart',
+    description: 'Your one-stop marketplace for all your daily needs',
+    animation: require('@/assets/Onboarding/onboarding1.json'),
+  },
+  {
+    id: '2',
+    title: 'Multi-Category Shopping',
+    description: 'From groceries to electronics, find everything in one place',
+    animation: require('@/assets/Onboarding/onboarding1.json'),
+  },
+  {
+    id: '3',
+    title: 'Fast Delivery',
+    description: 'Get your orders delivered quickly and safely to your doorstep',
+    animation: require('@/assets/Onboarding/fast delivery.json'),
+  },
+  {
+    id: '4',
+    title: 'Safe & Secure',
+    description: 'Shop with confidence with verified sellers and secure payments',
+    animation: require('@/assets/Onboarding/onboarding1.json'),
+  },
+];
+
+const OnboardingSlide = ({ slide }: { slide: OnboardingSlide }) => {
+  return (
+    <View className="flex-1 items-center justify-center px-8">
+      <View className="w-full aspect-square mb-8">
+        <LottieView
+          source={slide.animation}
+          autoPlay
+          loop
+          style={{ width: '100%', height: '100%' }}
+        />
+      </View>
+      <Text className="text-2xl font-bold text-center text-gray-900 mb-4">
+        {slide.title}
+      </Text>
+      <Text className="text-base text-center text-gray-500">
+        {slide.description}
+      </Text>
+    </View>
+  );
+};
 
 export default function Onboarding() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -54,7 +109,7 @@ export default function Onboarding() {
     }
   }, [activeIndex]);
 
-  const renderItem = useCallback(({ item }: { item: typeof onboardingSlides[0] }) => (
+  const renderItem = useCallback(({ item }: { item: OnboardingSlide }) => (
     <View style={{ width: SCREEN_WIDTH }}>
       <OnboardingSlide slide={item} />
     </View>

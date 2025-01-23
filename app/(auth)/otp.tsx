@@ -63,7 +63,7 @@ export default function OTP() {
           router.push('/(rider)/profile-setup');
           break;
         default:
-          router.push('/(user)/profile-setup');
+          router.push('/(user)/location-picker');
       }
     } catch (err) {
       setError('Invalid OTP. Please try again.');

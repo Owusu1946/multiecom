@@ -61,6 +61,9 @@ export default function Login() {
             <Link href="/signup" className="text-primary font-semibold">
               Sign Up
             </Link>
+            <Link href="/(rider)/onboarding" className="text-primary font-semibold">
+              See Onboarding
+            </Link>
           </View>
         </Animated.View>
       </Animated.View>
