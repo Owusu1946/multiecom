@@ -21,5 +21,4 @@ export default function Index() {
   }
 
   // You can add logic here to determine where to redirect based on auth state
-  return <Redirect href="/(user)/Mart" />;
 }
