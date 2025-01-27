@@ -6,6 +6,8 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 import { SPICES, type Spice } from '@/app/data/spices';
+import { Toast } from '@/app/components/ui/Toast';
+import { QuantitySelector } from '@/app/components/product/QuantitySelector';
 // Import SPICES data
     
 
@@ -13,15 +15,41 @@ export default function ProductScreen() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams();
   const [quantity, setQuantity] = useState(1);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   
   // Find product from SPICES data (we should move this to a global store later)
   const product = SPICES.find((p: Spice) => p.id === id);
   
   if (!product) return null;
 
+  const handleAddToCart = () => {
+    // Add to cart logic here
+    setToast({ message: 'Added to cart successfully!', type: 'success' });
+    setTimeout(() => {
+      router.push('/(user)/cart');
+    }, 1000);
+  };
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    setToast({ 
+      message: isFavorite ? 'Removed from favorites' : 'Added to favorites!', 
+      type: 'success' 
+    });
+  };
+
   return (
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
+      
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onHide={() => setToast(null)} 
+        />
+      )}
       
       {/* Header */}
       <BlurView intensity={70} className="absolute top-0 left-0 right-0 z-50">
@@ -66,8 +94,15 @@ export default function ProductScreen() {
               <Text className="text-2xl font-semibold text-gray-900">{product.name}</Text>
               <Text className="text-gray-500 mt-1">{product.description}</Text>
             </View>
-            <TouchableOpacity className="w-12 h-12 bg-gray-100 rounded-full items-center justify-center">
-              <Ionicons name="heart-outline" size={24} color="#666" />
+            <TouchableOpacity 
+              className="w-12 h-12 bg-gray-100 rounded-full items-center justify-center"
+              onPress={toggleFavorite}
+            >
+              <Ionicons 
+                name={isFavorite ? "heart" : "heart-outline"} 
+                size={24} 
+                color={isFavorite ? "#EF4444" : "#666"} 
+              />
             </TouchableOpacity>
           </View>
 
@@ -82,27 +117,12 @@ export default function ProductScreen() {
             <Text className="text-gray-500">{product.weight}</Text>
           </View>
 
-          {/* Quantity Selector */}
-          <View className="flex-row items-center justify-between mt-6 bg-gray-50 p-4 rounded-2xl">
-            <View className="flex-row items-center space-x-4">
-              <TouchableOpacity 
-                onPress={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-10 h-10 bg-white rounded-full items-center justify-center"
-              >
-                <Ionicons name="remove" size={24} color="#374151" />
-              </TouchableOpacity>
-              <Text className="text-xl font-semibold text-gray-900">{quantity}</Text>
-              <TouchableOpacity 
-                onPress={() => setQuantity(quantity + 1)}
-                className="w-10 h-10 bg-white rounded-full items-center justify-center"
-              >
-                <Ionicons name="add" size={24} color="#374151" />
-              </TouchableOpacity>
-            </View>
-            <Text className="text-2xl font-semibold text-primary">
-              ₵{(product.price * quantity).toFixed(2)}
-            </Text>
-          </View>
+          <QuantitySelector 
+            quantity={quantity}
+            onIncrease={() => setQuantity(q => q + 1)}
+            onDecrease={() => setQuantity(q => Math.max(1, q - 1))}
+            price={product.price}
+          />
         </View>
       </ScrollView>
 
@@ -113,10 +133,7 @@ export default function ProductScreen() {
       >
         <TouchableOpacity 
           className="w-full bg-primary py-4 rounded-2xl items-center"
-          onPress={() => {
-            // Add to cart logic here
-            router.push('/(user)/cart' as any);
-          }}
+          onPress={handleAddToCart}
         >
           <Text className="text-white font-semibold text-lg">
             Add to Cart • ₵{(product.price * quantity).toFixed(2)}
