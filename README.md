@@ -104,10 +104,7 @@ npm start
 
 ## Environment Setup
 Required environment variables:
-- API_URL
-- STRIPE_PUBLIC_KEY
-- GOOGLE_MAPS_API_KEY
-- FIREBASE_CONFIG
+JUST UI!! NO VARIABLES REQUIRED LOL...
 
 ## Contributing
 1. Fork the repository
