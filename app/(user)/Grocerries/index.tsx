@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Image, StatusBar } from 'react-native';
 import { useState } from 'react';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import Animated, { 
@@ -87,18 +87,14 @@ export default function UserDashboard() {
   }, []);
 
   return (
-    <View className="flex-1 bg-gray-50">
-      <ScrollView 
-        className="flex-1"
-        contentContainerStyle={{ paddingBottom: 20 }}
-        showsVerticalScrollIndicator={false}
-        stickyHeaderIndices={[1]}
-      >
-        <View style={{ paddingTop: insets.top }} className="px-4 bg-white">
-          <Animated.View 
-            style={headerAnimatedStyle}
-            className="flex-row items-center justify-between py-4"
-          >
+    <View className="flex-1 bg-white">
+      <StatusBar barStyle="dark-content" />
+      
+      {/* Fixed Header */}
+      <BlurView intensity={70} className="absolute top-0 left-0 right-0 z-50">
+        <View style={{ paddingTop: insets.top }} className="px-4 bg-white/90">
+          {/* Location and Cart Row */}
+          <View className="flex-row items-center justify-between py-4">
             <TouchableOpacity className="flex-row items-center space-x-2">
               <View className="w-10 h-10 bg-primary/10 rounded-full items-center justify-center">
                 <MaterialCommunityIcons name="store" size={24} color="#4F46E5" />
@@ -126,11 +122,10 @@ export default function UserDashboard() {
                 />
               </TouchableOpacity>
             </View>
-          </Animated.View>
-        </View>
+          </View>
 
-        <BlurView intensity={80} className="px-4 py-3 bg-white/90">
-          <View className="flex-row items-center space-x-2">
+          {/* Search Bar */}
+          <View className="flex-row items-center space-x-2 pb-4">
             <View className="flex-1 flex-row items-center bg-gray-100 rounded-xl px-4 py-2.5">
               <Ionicons name="search" size={20} color="#6B7280" />
               <TextInput
@@ -145,9 +140,19 @@ export default function UserDashboard() {
               <Ionicons name="options-outline" size={20} color="white" />
             </TouchableOpacity>
           </View>
-        </BlurView>
+        </View>
+      </BlurView>
 
-        <View className="px-4 pt-4">
+      {/* Scrollable Content */}
+      <ScrollView 
+        className="flex-1"
+        contentContainerStyle={{ 
+          paddingTop: insets.top + 120, // Adjust based on header height
+          paddingBottom: 20 
+        }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="px-4">
           <PromotionalBanner />
 
           <Animated.View 
@@ -172,6 +177,13 @@ export default function UserDashboard() {
                   <TouchableOpacity 
                     style={{ backgroundColor: category.color }}
                     className="p-4 rounded-2xl"
+                    onPress={() => {
+                      if (category.name === 'Spices') {
+                        router.push('/Grocerries/spices');
+                      } else {
+                        router.push(`/Grocerries/${category.name.toLowerCase()}`);
+                      }
+                    }}
                   >
                     <View className="flex-row items-center justify-between mb-8">
                       <Text className="text-3xl">{category.icon}</Text>
