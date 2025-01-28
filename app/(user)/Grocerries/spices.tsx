@@ -128,7 +128,7 @@ export default function SpicesScreen() {
               className="w-[48%] mb-4"
             >
               <TouchableOpacity
-                onPress={() => router.push(`/product/${spice.id}`)}
+                onPress={() => router.push(`/Grocerries/product/${spice.id}`)}
                 className="bg-gray-50 rounded-2xl p-3"
               >
                 <View className="relative">

@@ -24,10 +24,10 @@ export default function ProductScreen() {
   if (!product) return null;
 
   const handleAddToCart = () => {
-    // Add to cart logic here
+    // Add to cart logic here (should use global store)
     setToast({ message: 'Added to cart successfully!', type: 'success' });
     setTimeout(() => {
-      router.push('/(user)/cart');
+      router.push('/(user)/cart' as any);
     }, 1000);
   };
 
