@@ -21,5 +21,5 @@ export default function Index() {
   }
 
   // You can add logic here to determine where to redirect based on auth state
-  return <Redirect href="/(rider)/dashboard" />;
+  return <Redirect href="/(auth)/login" />;
 }
